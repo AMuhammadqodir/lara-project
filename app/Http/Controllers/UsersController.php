@@ -81,8 +81,15 @@ class UsersController extends Controller
             'shahr_nohiya' => 'required|integer',
             'maqom_id' => 'required|integer',
             'parol' => 'nullable|string|min:6|confirmed',
+            'surat' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        if ($request->hasFile('surat')) {
+            $file = $request->file('surat');
+            $filename = 'surat' . $id . '.' . $file->getClientOriginalExtension();
+            $path = $file->move(public_path('uploads/suratho'), $filename);
+            $data['surat'] = 'uploads/suratho/' . $filename;
+        }
         $user = MalumotiShakhsi::findOrFail($id);
 
         $user->update([

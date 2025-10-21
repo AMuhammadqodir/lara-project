@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -16,11 +17,16 @@ class ProfileController extends Controller
             return redirect()->route('login');
         }
 
-        $foydalanuvchi = DB::table('malumoti_shakhsi')
+        $ist = DB::table('malumoti_shakhsi')
             ->where('uid', $user['uid'])
             ->first();
+        $maqom = DB::table('maqom as m')
+        ->join('malumotho as mm', 'm.namudi_maqom', '=', 'mm.id')
+        ->select('m.maqom_id', 'm.namudi_maqom', 'mm.tojiki as nomi_maqom')
+        ->get();
+        $s_nohiya = DB::table('shahr_nohiya')->get();
 
-        return view('profile.index', compact('foydalanuvchi'));
+        return view('profile.index', compact('ist', 's_nohiya', 'maqom'));
     }
 
     public function update(Request $request)
@@ -30,12 +36,24 @@ class ProfileController extends Controller
         $request->validate([
             'nom' => 'required|string|max:150',
             'nasab' => 'required|string|max:150',
+            'nomi_padar' => 'nullable|string|max:150',
+            'jins' => 'required|in:Мард,Зан',
+            'shahr_nohiya' => 'required|integer',
+            'maqom_id' => 'required|integer',
+            'parol' => 'nullable|string|min:6|confirmed',
             'surat' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        $hashedPassword = Hash::make($request->parol);
         $data = [
             'nom' => $request->nom,
             'nasab' => $request->nasab,
+            'nomi_padar' => $request->nomi_padar,
+            'jins' => $request->jins,
+            'shahr_nohiya' => $request->shahr_nohiya,
+            'maqom_id' => $request->maqom_id,
+            'parol' => $hashedPassword,
+            'aktiv' => 1,
         ];
 
         if ($request->hasFile('surat')) {
