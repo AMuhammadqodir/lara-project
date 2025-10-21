@@ -30,7 +30,6 @@
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-5 col-md-7 col-sm-9">
@@ -38,7 +37,6 @@
                 <div class="text-center mb-4">
                     <h3 class="fw-bold text-primary">📝 Сабт аз рӯйхат</h3>
                 </div>
-
                 @if(session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
@@ -51,25 +49,20 @@
                         </ul>
                     </div>
                 @endif
-
-                <form action="{{ route('register') }}" method="POST">
+                <form action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-
                     <div class="mb-3">
                         <label class="form-label">Ном</label>
                         <input type="text" name="nom" class="form-control" placeholder="Номи худро ворид кунед" required>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label">Насаб</label>
                         <input type="text" name="nasab" class="form-control" placeholder="Насаби худро ворид кунед" required>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label">Номи падар</label>
                         <input type="text" name="nomi_padar" class="form-control" placeholder="Номи падар">
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label">Ҷинс</label>
                         <select name="jins" class="form-select" required>
@@ -78,7 +71,10 @@
                             <option value="Зан">🚺 Зан</option>
                         </select>
                     </div>
-
+                    <div class="mb-3">
+                        <label for="surat" class="form-label">Интихоби расм</label>
+                        <input type="file" name="surat" id="surat" class="form-control" accept="image/*">
+                    </div>
                     <div class="mb-3">
                         <label class="form-label">🏢 Шаҳр / Ноҳия</label>
                         <select name="shahr_nohiya" class="form-select" required>
@@ -88,7 +84,6 @@
                             @endforeach
                         </select>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label">Мақом</label>
                         <select name="maqom_id" class="form-select" required>
@@ -98,26 +93,21 @@
                             @endforeach
                         </select>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label">🔐 Парол</label>
                         <input type="password" name="parol" class="form-control" placeholder="Парол ворид кунед" required>
                     </div>
-
                     <div class="mb-3">
                         <label class="form-label">🔐 Такрори парол</label>
                         <input type="password" name="parol_confirmation" class="form-control" placeholder="Паролро такрор ворид кунед" required>
                     </div>
-
                     <button type="submit" class="btn btn-primary w-100 py-2">📥 Сабт</button>
                 </form>
-
                 <div class="text-center mt-3">
                     <p class="mb-0">Агар аллакай сабт шуда бошед? 
                         <a href="{{ route('login') }}" class="text-primary fw-bold">Воридшавӣ</a>
                     </p>
                 </div>
-
             </div>
         </div>
     </div>

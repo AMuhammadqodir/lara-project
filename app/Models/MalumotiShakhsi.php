@@ -15,7 +15,7 @@ class MalumotiShakhsi extends Model
     protected $fillable = [
         'login', 'parol', 'nom', 'nasab', 'nomi_padar', 
         'nomu_nasab', 'nomu_nasab_lotini', 'shahr_nohiya', 
-        'suroga1', 'suroga2', 'jins', 'raqami_telefon1', 
+        'suroga1', 'suroga2', 'jins', 'surat', 'raqami_telefon1', 
         'raqami_telefon2', 'maqom_id', 'aktiv', 'tashrifi_okhiron'
     ];
 
@@ -39,6 +39,7 @@ class MalumotiShakhsi extends Model
             'nomu_nasab_lotini' => $nomu_nasab_lotini,
             'shahr_nohiya' => $data['shahr_nohiya'],
             'jins' => $data['jins'],
+            'surat' => $data['surat'] ?? null,
             'maqom_id' => $data['maqom_id'],
             'aktiv' => 1,
             'tashrifi_okhiron' => now(),

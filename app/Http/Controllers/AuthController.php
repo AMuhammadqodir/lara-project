@@ -28,10 +28,18 @@ class AuthController extends Controller
             'nasab' => 'required|string|max:150',
             'nomi_padar' => 'nullable|string|max:150',
             'jins' => 'required|in:Мард,Зан',
+            'surat' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'shahr_nohiya' => 'required|integer',
             'maqom_id' => 'required|integer',
             'parol' => 'required|string|min:6|confirmed',
         ]);
+        $surat = null;
+        if ($request->hasFile('surat')) {
+            $file = $request->file('surat');
+            $surat = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/suratho'), $surat);
+            $path = 'uploads/suratho/' . $surat;
+        }
 
         $user = MalumotiShakhsi::ilova_istifodabar([
             'nom' => $request->nom,
@@ -41,6 +49,7 @@ class AuthController extends Controller
             'shahr_nohiya' => $request->shahr_nohiya,
             'maqom_id' => $request->maqom_id,
             'parol' => $request->parol,
+            'surat' => $path,
         ]);
 
         MalumotParol::create([
@@ -64,19 +73,51 @@ class AuthController extends Controller
             'parol' => 'required|string',
         ]);
 
-        $user = MalumotiShakhsi::where('login', $request->login)->first();
+        $user = DB::table('malumoti_shakhsi')
+            ->where('login', $request->login)
+            ->first();
 
         if ($user && Hash::check($request->parol, $user->parol)) {
-            session(['user' => $user]);
-            return redirect()->route('dashboard')->with('success', 'Хуш омадед!');
+            // Foydalanuvchi sessionga saqlash
+            $request->session()->put('user', [
+                'uid' => $user->uid,
+                'login' => $user->login,
+                'nom' => $user->nom,
+                'nasab' => $user->nasab,
+                'jins' => $user->jins,
+                'surat' => $user->surat ?? 'dist/nobody.jpg',
+                'shahr_nohiya' => $user->shahr_nohiya,
+                'maqom_id' => $user->maqom_id,
+            ]);
+
+            DB::table('malumoti_shakhsi')
+            ->where('uid', $user->uid)
+            ->update(['is_online' => true]);
+
+            // Maqomga qarab yo'naltirish
+            switch ($user->maqom_id) {
+                case 1: return redirect()->route('maqom.rector');       // Rector
+                case 2: return redirect()->route('maqom.admin');     // Admin
+                case 3: return redirect()->route('maqom.muallim');   // Muallim
+                case 4: return redirect()->route('maqom.donishju');  // Donishju
+                default: return redirect()->route('dashboard');
+            }
         }
 
         return back()->withErrors(['login' => 'Логин ё парол нодуруст аст!']);
     }
 
+
     public function logout()
     {
+        $user = session('user');
+        if ($user) {
+            DB::table('malumoti_shakhsi')
+                ->where('uid', $user['uid'])
+                ->update(['is_online' => false]);
+        }
         session()->forget('user');
         return redirect()->route('login');
     }
+
 }

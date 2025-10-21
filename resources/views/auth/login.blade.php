@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - Kutubxona Tizimi</title>
+<title>СА-ДДХ</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
     body {
@@ -90,7 +90,7 @@
     <div class="row justify-content-center">
         <div class="col-12 col-md-6 col-lg-4">
             <div class="card">
-                <div class="logo">📖Системаи омӯзиш</div>
+                <div class="logo">📖СА - ДДХ</div>
                 <h4 class="text-center mb-4">Воридшавӣ</h4>
 
                 <!-- Xatoliklar -->
